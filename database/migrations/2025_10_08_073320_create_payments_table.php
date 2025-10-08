@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('external_id')->nullable();  // id dari gateway
             $table->string('transaction_status')->default('pending');
             $table->decimal('amount', 12, 2);
-            $table->json('payload')->nullable();        // response
+            $table->json('payload')->nullable();        // response/raw webhook
             $table->timestamps();
         });
     }
