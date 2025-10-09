@@ -15,7 +15,7 @@ class Coupon extends Model
         'value',
         'valid_form',
         'valid_until',
-        'max_users',
+        'max_uses',
         'uses'
     ];
 
@@ -34,7 +34,7 @@ class Coupon extends Model
         $now = now();
         if($this->valid_form && $now->lt($this->valid_form)) return false;
         if($this->valid_until && $now->gt($this->valid_until)) return false;
-        if($this->max_users && $this->uses >= $this->max_users) return false;
+        if($this->max_uses && $this->uses >= $this->max_uses) return false;
         return true;
     }
 
