@@ -11,6 +11,7 @@ class HomeController extends Controller
     {
 
         $banners = DB::table('banners')->get();
-        return view('home');
+        $about_us = DB::table('about_us')->get();
+        return view('home' ,compact('banners','about_us'));
     }
 }

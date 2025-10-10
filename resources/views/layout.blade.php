@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -11,165 +11,134 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    <title>{{ $title ?? 'Hidway Dine - Your Favourite Foods' }}</title>
 
-    <title>Midway Dine - Your Favourite Foods</title>
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/font-awesome.css') }}">
-
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css-library.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/css/owl-carousel.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/css/lightbox.css') }}">
 
+    <!-- (opsional) JS pihak ketiga yg kamu butuh -->
     <script src="{{ asset('assets/js/angular.min.js') }}"></script>
     <script src="{{ asset('assets/js/bKash-checkout.js') }}"></script>
     <script src="{{ asset('assets/js/bKash-checkout-sandbox.js') }}"></script>
+
+    <style>
+        .badge {
+            padding: 0 6px;
+            height: 16px;
+            border-radius: 9px
+        }
+
+        #lblCartCount {
+            font-size: 12px;
+            background: #ff0000;
+            color: #fff;
+            margin-left: 4px
+        }
+
+        .header-area {
+            z-index: 1000
+        }
+    </style>
 </head>
 
-<body class="">
+<body class="font-sans antialiased">
 
-    <header class="header-area" style="z-index: 1000">
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header-area">
         <div class="container">
             <nav class="main-nav">
-                <a href="{{ url('home') }}"class="logo">
-                    <img width ="100px" src="asset('asset/images/logo.png')" alt="">
+                <!-- Logo -->
+                <a href="{{ url('home') }}" class="logo">
+                    <img width="80" src="{{ asset('assets/images/logo-2.png') }}" alt="Hidway Dine">
                 </a>
+
+                <!-- Nav -->
                 <ul class="nav">
-                    <li class="scroll-to-section">
-                        <a href="{{ url('/') }}" class="active">Home</a>
-                    </li>
-                    <li class="scroll-to-section">
-                        <a href="/#about">About</a>
-                    </li>
-                    <li class="scroll-to-section">
-                        <a href="/#menu">Menu</a>
-                    </li>
-                    <li class="scroll-to-section">
-                        <a href="/trace-my-order">Trace Order</a>
-                    </li>
-                    <li class="scroll-to-section">
-                        <a href="/#chefs">Chefs</a>
-                    </li>
-                    <li class="scroll-to-section">
-                        <a href="/#reservation">Contact Us</a>
-                    </li>
-                    <li class="scroll-to-section">
-                        <a href="/#cart">Cart</a>
-                    </li>
-                    @php
-                        $cart_amount = 0;
-                        if (Auth::check()) {
-                            $cartId = \App\Models\Cart::where('user_id', Auth::id())->value('id');
-                            if ($cartId) {
-                                $cart_amount = \App\Models\CartItem::where('cart_id', $cartId)->sum('quantity'); // total item
-                            }
-                        }
-                    @endphp
+                    <li class="scroll-to-section"><a href="{{ url('/') }}"
+                            class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
+                    <li class="scroll-to-section"><a href="/#about">About</a></li>
+                    <li class="scroll-to-section"><a href="/#menu">Menu</a></li>
+                    <li class="scroll-to-section"><a href="/trace-my-order">Trace Order</a></li>
+                    <li class="scroll-to-section"><a href="/my-order">My Order</a></li>
+                    <li class="scroll-to-section"><a href="/#chefs">Chefs</a></li>
+                    <li class="scroll-to-section"><a href="/#reservation">Contact Us</a></li>
+
+                    <!-- Cart -->
                     <li class="scroll-to-section" id="cart">
                         <a href="{{ url('/cart') }}">
                             <i class="fa fa-shopping-cart"></i>
-                            <span class="badge badge-warning" id="lblCartCount">{{ $cart_amount }}</span>
+                            <span class="badge badge-warning" id="lblCartCount">{{ $cart_amount ?? 0 }}</span>
                         </a>
                     </li>
 
-                    <style>
-                        .badge {
-                            padding-left: 9px;
-                            padding-right: 9px;
-                            padding-top: 10px;
-                            -webkit-border-radius: 9px;
-                            -moz-border-radius: 9px;
-                            border-radius: 9px;
-                            height: 16px;
-                            text-align: center;
-                        }
-
-                        .label-warning[href],
-                        .badge-warning[href] {
-                            background-color: #c67605
-                        }
-
-                        #lblCartCount {
-                            font-size: 12px;
-                            background: #ff0000;
-                            color: #fff;
-                            padding: 0 5px;
-                            vertical-align: top;
-                            margin-left: -10px;
-                        }
-                    </style>
-                    <li>
-                        @if (Route::has('login'))
-                            <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                                @auth
-                        <li style="margin-top: -13px">
-                            <x-app-layout>
-                            </x-app-layout>
-                        </li>
+                    <!-- Auth -->
+                    @auth
+                        <li style="margin-top:-13px;"><x-app-layout /></li>
                     @else
-                        <li>
-                            <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
-                        </li>
+                        <li><a href="{{ route('login') }}">Log in</a></li>
                         @if (Route::has('register'))
-                            <li>
-                                <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
-                            </li>
+                            <li><a href="{{ route('register') }}">Register</a></li>
                         @endif
                     @endauth
-        </div>
-
-        @endif
-        </li>
-        </ul>
-        </nav>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <div style="min-height:750px">
+    <!-- Page Content -->
+    <main style="min-height:750px">
         @yield('page-content')
-    </div>
+    </main>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-xs-12">
                     <div class="right-text-content">
                         <ul class="social-icons">
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                            <li><a href="https://web.facebook.com/rahathosenmanik/"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li><a href="https://twitter.com/rahathosenmanik"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="https://www.linkedin.com/in/rahathossenmanik/"><i
+                                        class="fa fa-linkedin"></i></a></li>
+                            <li><a href="https://www.instagram.com/rahathossenmanik/?hl=en"><i
+                                        class="fa fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="logo">
-                        <a href="{{ url('home') }}"><img src="{{ asset('assets/images/logo.png') }}"></a>
+                        <a href="{{ url('home') }}"><img width="100"
+                                src="{{ asset('assets/images/logo-2.png') }}" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-xs-12">
                     <div class="left-text-content">
-                        <p>© Copyright Midway Dine
-                            <br>Since 2025
-                        </p>
-                        </p>
+                        <p>© Hidway Dine<br>Since 2025</p>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-    <!-- jQuery -->
-    <script src="{{ asset('assets/js/jquery-2.1.0.min.js') }}"></script>
 
-    <!-- Bootstrap -->
+    <!-- JS -->
+    <script src="{{ asset('assets/js/jquery-2.1.0.min.js') }}"></script>
     <script src="{{ asset('assets/js/popper.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-
-    <!-- Plugins -->
     <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
     <script src="{{ asset('assets/js/accordions.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker.js') }}"></script>
@@ -180,24 +149,7 @@
     <script src="{{ asset('assets/js/slick.js') }}"></script>
     <script src="{{ asset('assets/js/lightbox.js') }}"></script>
     <script src="{{ asset('assets/js/isotope.js') }}"></script>
-
-    <!-- Global Init -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
-    <script>
-        $(function() {
-            var selectedClass = "";
-            $("p").click(function() {
-                selectedClass = $(this).attr("data-rel");
-                $("#portfolio").fadeTo(50, 0.1);
-                $("#portfolio div").not("." + selectedClass).fadeOut();
-                setTimeout(function() {
-                    $("." + selectedClass).fadeIn();
-                    $("#portfolio").fadeTo(50, 1);
-                }, 500);
-
-            });
-        });
-    </script>
 </body>
 
 </html>
